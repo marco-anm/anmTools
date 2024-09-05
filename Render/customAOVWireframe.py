@@ -1,4 +1,4 @@
-from maya import cmds
+from maya import cmds, mel
 from mtoa import aovs
 
 
@@ -20,10 +20,13 @@ cmds.setAttr("customAOV_wireframe_mtl.edgeColor", 1, 1, 1)
 cmds.setAttr("customAOV_wireframe_mtl.baseColor", 0, 0, 0)
 
 if cmds.objExists("aiAOV_customWireframe"):
-    customFilter = "aiAOV_customWireframe"
+    customAOV = "aiAOV_customWireframe"
 else:
-    aovs.AOVInterface().addAOV("customWireframe", aovType="rgba")
+    customAOV = aovs.AOVInterface().addAOV("customWireframe", aovType="rgba")
 
-cmds.connectAttr(toonMtl + ".outColor", customFilter+".defaultValue", force=True)
+mel.eval('createNode aiAOVFilter -n "aiAOVFilter_customWireframe";setAttr ".ai_translator" -type "string" "contour"')
 
-cmds.confirmDialog(m="Go to AOVs settings and change customWireframe's filter to contour", b=["Ok"])
+cmds.connectAttr("aiAOVFilter_customWireframe.message", "aiAOV_customWireframe.outputs[0].filter", force=True)
+
+cmds.connectAttr(toonMtl + ".outColor", "aiAOV_customWireframe.defaultValue", force=True)
+
