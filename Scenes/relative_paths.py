@@ -27,14 +27,9 @@ def copy_to_sourceimages():
             except:
                 print(f"Can't find {each_file} texture")
 
-
-
 def set_paths_to_relatives():
     files = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True)
     for each_file in files:
         file_path = cmds.getAttr(each_file)
         if not file_path.startswith(("sourceimages", "/sourceimages")):
-            file_name = os.path.split(file_path)[-1]
-            new_path = os.path.join("\sourceimages", file_name)
-            print(str(each_file) + " new path will be: " + new_path)
-            cmds.filePathEditor(each_file, repath="/sourceimages", force=True)
+            cmds.filePathEditor(each_file, repath="//sourceimages", force=True)
