@@ -1,17 +1,19 @@
 from maya import cmds
 import os
 
+
 def __init__(self):
     self.all_files = []
     self.iterable_files = []
     self.file_type = {
-        "texture" : "file"
+        "texture": "file"
     }
+
 
 def copy_to_sourceimages():
     files = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True, byType="file")
     sourceimage_files = cmds.filePathEditor(query=True, listFiles="sourceimages", attributeOnly=True)
-    proyect_path = cmds.workspace(query=True, rd=True)
+    project_path = cmds.workspace(query=True, rootDirectory=True)
     if not sourceimage_files:
         sourceimage_files = [""]
 
@@ -22,10 +24,11 @@ def copy_to_sourceimages():
             file_path = os.path.split(file_full_path)[0]
 
             try:
-                cmds.filePathEditor(str(each_file), copyAndRepath=(file_path, proyect_path + "sourceimages"),
+                cmds.filePathEditor(str(each_file), copyAndRepath=(file_path, project_path + "sourceimages"),
                                     force=True)
             except:
                 print(f"Can't find {each_file} texture")
+
 
 def set_paths_to_relatives():
     files = cmds.filePathEditor(query=True, listFiles="", attributeOnly=True)
